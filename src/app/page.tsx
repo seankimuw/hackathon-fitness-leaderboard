@@ -146,12 +146,21 @@ function App() {
                 backgroundColor: "#1f1f1f"
               }}
             >
+              {(counter % 2) ? 
               <Image
                 src={runningImage as StaticImageData}
                 alt='Running Icon'
                 layout="fill"
                 objectFit="cover"
+                style={{ transform: 'scaleX(-1)' }}
               />
+              : <Image
+                src={runningImage as StaticImageData}
+                alt='Running Icon'
+                layout="fill"
+                objectFit="cover"
+              />
+}
             </Button>
           </Container>
         </>
