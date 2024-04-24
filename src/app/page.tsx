@@ -22,7 +22,7 @@ function App() {
     address: CONTRACT_ID, // Replace with your contract's address
     functionName: 'getParticipants',
   });
-  const { writeContract } = useWriteContract()
+  const { writeContract } = useWriteContract();
   console.log("result: ", participationFee, isError, readError);
   // const users = participants?.map((participant) => {
   //   const { data: users } = useReadContract({
@@ -69,22 +69,8 @@ function App() {
     {/* {!account.address || !participants?.includes(account.address) ? (<JoinCompetitionPage contractAddress={account.address!}/>) : <></>} */}
 
     <div>PARTICIPANTS: {participants?.map((participant) => (
-      <Card/>
+      <Card userAddr={participant}/>
     ))}</div>
-
-    <button 
-        onClick={() => 
-          writeContract({ 
-            abi,
-            address: CONTRACT_ID,
-            functionName: 'registerUser',
-            value: participationFee,
-            args: [],
-        })
-      }
-    >
-      
-    </button>
 {/* 
     {account.address && !participants?.includes(account.address) ? (<button 
         onClick={() => 
