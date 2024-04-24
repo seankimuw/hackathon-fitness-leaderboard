@@ -69,7 +69,7 @@ function App() {
         console.log(e);
       }
       const newUserSteps = participants.find((p) => p.addr === account.address)?.weeklySteps;
-      if (lastUserSteps && newUserSteps && newUserSteps > lastUserSteps) {
+      if (lastUserSteps && newUserSteps && newUserSteps >= lastUserSteps) {
         setCounter(0);
         setLastUserSteps(newUserSteps);
       }
@@ -93,7 +93,7 @@ function App() {
         args: [BigInt(5)],
       }, {
         onSuccess: () => {
-
+          // setCounter(0);
         }
       });
       console.log("Write contract by 5 steps!")

@@ -35,7 +35,7 @@ function Leaderboard({ sortedParticipants, counter }) {
                         color: participant.addr === address ? 'primary.main' : 'text.primary',
                       }}
                     >
-                      {participant.name}
+                      {participant.name} {participant.addr === address && '(You)'}
                     </Typography>
                   }
                   secondary={
