@@ -128,7 +128,7 @@ function App() {
       {!participantAddresses || !participantAddresses.includes(account.address) ? <JoinCompetitionPage /> : null}
       {participantAddresses && participantAddresses.includes(account.address) ? (
         <>
-          <Leaderboard sortedParticipants={sortedParticipants} counter={counter}/>
+          <Leaderboard sortedParticipants={sortedParticipants} counter={counter} participants={participants}/>
           {winner ? (<Container style={{display: "flex", justifyContent:"center", marginTop: "70px"}}>
             <h1>{winner} is the winner!</h1>
           </Container>) : null}

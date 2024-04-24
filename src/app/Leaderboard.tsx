@@ -11,9 +11,19 @@ function TrophyIcon({ color }) {
     </SvgIcon>)
 }
 
-function Leaderboard({ sortedParticipants, counter }) {
+function Leaderboard({ sortedParticipants, counter, participants }) {
   const { address } = useAccount();
   const maxSteps = 100; // Define the maximum steps for the progress bar
+
+  const newSortedParticipants = [...participants ?? []].sort((a, b) => {
+    if (a.addr === address) {
+      return Number(b.weeklySteps) - (Number(a.weeklySteps) + counter)
+    }
+    if (b.addr === address) {
+      return Number(b.weeklySteps) + counter - Number(a.weeklySteps)
+    }
+    return Number(b.weeklySteps) - Number(a.weeklySteps)
+  });
 
   return (
     <Card sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
@@ -22,7 +32,7 @@ function Leaderboard({ sortedParticipants, counter }) {
           Leaderboard
         </Typography>
         <List>
-          {sortedParticipants.map((participant, index) => (
+          {newSortedParticipants.map((participant, index) => (
             <React.Fragment key={participant.addr}>
               <ListItem>
                 <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{index + 1}</Avatar>
