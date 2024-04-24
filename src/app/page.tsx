@@ -8,12 +8,14 @@ import Profile from './Profile';
 import JoinCompetitionPage from './JoinCompetitionPage';
 import EndCompetitionButton from './endCompetitionBtn';
 import Leaderboard from './Leaderboard';
+import { Button } from '@mui/material';
 
 export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920";
 
 function App() {
   const account = useAccount();
   const [winner, setWinner] = useState();
+  const { writeContract } = useWriteContract();
 
   const { data: participants, refetch } = useReadContract({
     abi,
@@ -21,44 +23,54 @@ function App() {
     functionName: 'getParticipants',
   });
 
-  useEffect(() => {
-    const unwatchRegisterUser = watchContractEvent(getConfig(), {
+  const unwatchRegisterUser = watchContractEvent(getConfig(), {
+    address: CONTRACT_ID,
+    abi,
+    eventName: 'NewUserRegistered',
+    onLogs: (logs) => {
+      console.log('New User Registered!', logs);
+      refetch(); // Re-fetch participants when event is received
+    },
+  });
+
+  const unwatchSteps = watchContractEvent(getConfig(), {
+    address: CONTRACT_ID,
+    abi,
+    eventName: 'StepsUpdated',
+    onLogs: (logs) => {
+      console.log('StepsUpdated!', logs);
+      refetch(); // Re-fetch participants when event is received
+    },
+  });
+
+  const unwatchWinner = watchContractEvent(getConfig(), {
+    address: CONTRACT_ID,
+    abi,
+    eventName: 'WeeklyWinner',
+    onLogs: (logs) => {
+      console.log('WeeklyWinner!', logs);
+      refetch(); // Re-fetch participants when event is received
+    },
+  });
+
+  const handleSteps = () => {
+    writeContract({
       address: CONTRACT_ID,
       abi,
-      eventName: 'NewUserRegistered',
-      onLogs: (logs) => {
-        console.log('New User Registered!', logs);
-        refetch(); // Re-fetch participants when event is received
-      },
+      functionName: 'updateSteps',
+      args: [BigInt(3)],
     });
-
-    const unwatchSteps = watchContractEvent(getConfig(), {
-      address: CONTRACT_ID,
-      abi,
-      eventName: 'StepsUpdated',
-      onLogs: (logs) => {
-        console.log('StepsUpdated!', logs);
-        refetch(); // Re-fetch participants when event is received
-      },
-    });
-
-    const unwatchWinner = watchContractEvent(getConfig(), {
-      address: CONTRACT_ID,
-      abi,
-      eventName: 'WeeklyWinner',
-      onLogs: (logs) => {
-        console.log('WeeklyWinner!', logs);
-        refetch(); // Re-fetch participants when event is received
-      },
-    });
+  }
 
 
-    return () => {
-      unwatchRegisterUser(); // Clean up the event listener on component unmount
-      unwatchSteps();
-      unwatchWinner();
-    };
-  }, [refetch]);
+  // useEffect(() => {
+
+  //   return () => {
+  //     unwatchRegisterUser(); // Clean up the event listener on component unmount
+  //     unwatchSteps();
+  //     unwatchWinner();
+  //   };
+  // }, [refetch]);
 
   const participantAddresses = participants?.map((participant) => participant.addr);
   const sortedParticipants = [...participants ?? []].sort((a, b) => Number(b.weeklySteps) - Number(a.weeklySteps));
@@ -77,7 +89,10 @@ function App() {
       )}
       {winner ? <h1>{winner} is the winner!</h1> : null}
       {participantAddresses && participantAddresses?.includes(account.address) ? (
+        <>
         <Leaderboard sortedParticipants={sortedParticipants} />
+        <Button onClick={handleSteps}>Update Steps</Button>
+        </>
       ) : null}
     </div>
   );
