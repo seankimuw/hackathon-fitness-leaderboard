@@ -17,7 +17,7 @@ export const EndCompetitionButton = () => {
   };
 
   return (
-    <Container maxWidth="sm" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+    <Container maxWidth="sm" style={{display: 'flex',  justifyContent:'right', alignItems:'right', marginRight: 0}}>
       {/* <Box
         display="flex"
         flexDirection="column"
@@ -30,11 +30,20 @@ export const EndCompetitionButton = () => {
         </Typography> */}
         <Button
           variant="contained"
-          color="primary"
+          // color="primary"
           size="large"
           onClick={handleEndCompetition}
           disabled={isLoading}
-          sx={{ mt: 2 }}
+          // sx={{ mt: 2, mr: 0 }}
+          sx={{
+            mt: 2,
+            mr: 0,
+            backgroundColor: '#ff6f61', // Pastel red color
+            '&:hover': {
+              backgroundColor: '#ff4f3d', // Darker shade on hover
+            },
+            color: 'white', // Text color
+          }}
         >
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />

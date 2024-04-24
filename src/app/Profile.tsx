@@ -16,17 +16,17 @@ const Profile = () => {
 // Styles for the Profile component
 const styles = {
   profileContainer: {
-    position: 'absolute',
-    top: '10px',
-    left: '20px',
-    justifyContent: 'center',
+    // position: 'absolute',
+    // top: '10px',
+    // left: '20px',
+    justifyContent: 'left',
     display: 'flex',
     backgroundColor: '#f9f9f9',
     borderRadius: '8px',
     padding: '20px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     maxWidth: '400px',
-    margin: '20px auto',
+    // margin: '20px auto',
   },
   title: {
     marginBottom: '15px',
