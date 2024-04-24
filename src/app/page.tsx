@@ -66,6 +66,7 @@ function App() {
         });
         setWinner(winner[0]);
       } catch(e) {
+        setWinner("");
         console.log(e);
       }
       const newUserSteps = participants.find((p) => p.addr === account.address)?.weeklySteps;
