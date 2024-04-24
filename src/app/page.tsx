@@ -1,122 +1,86 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useAccount, useConnect, useDisconnect, useReadContract, useWriteContract } from 'wagmi'
+"use client";
+import React, { useEffect, useState } from 'react';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { abi } from './abi';
-import JoinCompetitionPage from './JoinCompetitionPage';
-import Profile from './Profile';
-import UserCard from './card';
-import EndCompetitionButton from './endCompetitionBtn';
-import AppleWatchTracker from './AppleWatchTracker';
-import Leaderboard from './Leaderboard';
-import { Button, CardActions } from '@mui/material';
-import { watchContractEvent } from '@wagmi/core'
+import { watchContractEvent } from '@wagmi/core';
 import { getConfig } from '@/wagmi';
+import Profile from './Profile';
+import JoinCompetitionPage from './JoinCompetitionPage';
+import EndCompetitionButton from './endCompetitionBtn';
+import Leaderboard from './Leaderboard';
 
-export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920"
+export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920";
 
 function App() {
   const account = useAccount();
+  const [winner, setWinner] = useState();
 
-  const unwatch = watchContractEvent(getConfig(), {
-    address: CONTRACT_ID,
-    abi,
-    eventName: 'NewUserRegistered',
-    onLogs(logs) {
-      console.log('New User Registered !', logs)
-    },
-  })
-  unwatch()
-
-
-  const { data: participants } = useReadContract({
+  const { data: participants, refetch } = useReadContract({
     abi,
     address: CONTRACT_ID,
     functionName: 'getParticipants',
-  })
+  });
 
-  const { writeContract } = useWriteContract();
+  useEffect(() => {
+    const unwatchRegisterUser = watchContractEvent(getConfig(), {
+      address: CONTRACT_ID,
+      abi,
+      eventName: 'NewUserRegistered',
+      onLogs: (logs) => {
+        console.log('New User Registered!', logs);
+        refetch(); // Re-fetch participants when event is received
+      },
+    });
+
+    const unwatchSteps = watchContractEvent(getConfig(), {
+      address: CONTRACT_ID,
+      abi,
+      eventName: 'StepsUpdated',
+      onLogs: (logs) => {
+        console.log('StepsUpdated!', logs);
+        refetch(); // Re-fetch participants when event is received
+      },
+    });
+
+    const unwatchWinner = watchContractEvent(getConfig(), {
+      address: CONTRACT_ID,
+      abi,
+      eventName: 'WeeklyWinner',
+      onLogs: (logs) => {
+        console.log('WeeklyWinner!', logs);
+        refetch(); // Re-fetch participants when event is received
+      },
+    });
+
+
+    return () => {
+      unwatchRegisterUser(); // Clean up the event listener on component unmount
+      unwatchSteps();
+      unwatchWinner();
+    };
+  }, [refetch]);
 
   const participantAddresses = participants?.map((participant) => participant.addr);
-  
   const sortedParticipants = [...participants ?? []].sort((a, b) => Number(b.weeklySteps) - Number(a.weeklySteps));
-  const [winner, setWinner] = useState();
 
-  const currentUser = participants?.find((participant) => participant.addr === account.address);
-
-  const handleStep = () => {
-    writeContract({ 
-        abi,
-        address: CONTRACT_ID,
-        functionName: 'updateSteps',
-        args: [BigInt(1)],
-    })
-  };
-
-
-  // useEffect(() => {
-  //   if (participants) {
-  //     for (let i = 0; i < participants.length; i++) {
-  //       let data = useReadContract({
-  //         abi,
-  //         address: CONTRACT_ID,
-  //         functionName: 'users',
-  //         args: [participants[i]],
-  //       })
-  //     }
-  //   }
-  // }
-  // , [participants])
-  console.log(participants, participantAddresses, account)
+  console.log(participants, participantAddresses, account);
   if (!account || !account.address) {
-    return <Profile/>
+    return <Profile />;
   }
 
   return (
-    <div >
+    <div>
       <Profile />
-
-      {!participantAddresses || !participantAddresses?.includes(account.address) ? <JoinCompetitionPage /> : <></>}
-      {winner || !participantAddresses || !participantAddresses?.includes(account.address) ? <></> : <EndCompetitionButton handleSetWinner={setWinner} sortedParticipants={sortedParticipants}/>}
-      {winner ? <h1>{winner} is the winner!</h1> : <></>}
-      {/* {participantAddresses && participantAddresses?.includes(account.address) ? 
-      (<div className="grid grid-cols-1">
-        <h2 className="text-2xl font-bold mt-8 mb-4" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Step Competition</h2>
-        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mg-4">
-            {participants?.map((participant) => (
-              <UserCard 
-                key={participant.addr} 
-                userAddr={participant.addr as any}
-              />
-            ))}
-          </div>
-        </div>
-      </div>) : <>  </>} */}
-      
-      {/* {participantAddresses && participantAddresses?.includes(account.address) ? 
-      (<div className="grid grid-cols-1">
-        <h2 className="text-2xl font-bold mt-8 mb-4" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Step Competition</h2>
-        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mg-4">
-            {participants?.map((participant) => (
-
-              <AppleWatchTracker participant={participant} key={participant.addr} progress={Number(participant?.weeklySteps) + 10}/>
-            ))}
-          </div>
-        </div>
-      </div>) : <>  </>} */}
-
-      {participantAddresses && participantAddresses?.includes(account.address) ? 
-      (<Leaderboard sortedParticipants={sortedParticipants} />) : <>  </>}
-
-<CardActions>
-            <Button size="small" onClick={handleStep}>Step!</Button>
-          </CardActions>
-      
+      {!participantAddresses || !participantAddresses?.includes(account.address) ? <JoinCompetitionPage /> : null}
+      {winner || !participantAddresses || !participantAddresses?.includes(account.address) ? null : (
+        <EndCompetitionButton/>
+      )}
+      {winner ? <h1>{winner} is the winner!</h1> : null}
+      {participantAddresses && participantAddresses?.includes(account.address) ? (
+        <Leaderboard sortedParticipants={sortedParticipants} />
+      ) : null}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

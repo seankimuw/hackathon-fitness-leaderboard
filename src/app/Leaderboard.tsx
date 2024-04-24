@@ -1,9 +1,25 @@
 // Leaderboard.jsx
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, CardActions } from '@mui/material';
 import AppleWatchTracker from './AppleWatchTracker';
+import UserCard from './card';
+import { CONTRACT_ID } from './page';
+import { abi } from './abi';
+import { useWriteContract } from 'wagmi';
 
 const Leaderboard = ({ sortedParticipants }: {sortedParticipants: any}) => {
+
+  const { writeContract } = useWriteContract();
+  
+  const handleStep = () => {
+    writeContract({ 
+        abi,
+        address: CONTRACT_ID,
+        functionName: 'updateSteps',
+        args: [BigInt(1)],
+    })
+  };
+  
   // Sort participants by progress (weeklySteps) in descending order
 
   const olympicsSortedParticipants = sortedParticipants.length >= 3 ?  [
@@ -12,6 +28,7 @@ const Leaderboard = ({ sortedParticipants }: {sortedParticipants: any}) => {
     sortedParticipants[2],
   ] : sortedParticipants;
   return (
+    <>
     <Box sx={styles.leaderboardContainer}>
       {olympicsSortedParticipants.map((participant: any, index: number) => (
         <Box
@@ -21,10 +38,18 @@ const Leaderboard = ({ sortedParticipants }: {sortedParticipants: any}) => {
             ...styles[`position${index + 1}`],
           }}
         >
-          <AppleWatchTracker progress={Number(participant.weeklySteps)} participant={participant} />
+          {/* <AppleWatchTracker progress={Number(participant.weeklySteps)} participant={participant} /> */}
+          <UserCard participant={participant} />
         </Box>
       ))}
     </Box>
+
+
+    <CardActions>
+        <Button size="small" onClick={handleStep}>Step!</Button>
+    </CardActions>
+
+      </>
   );
 };
 

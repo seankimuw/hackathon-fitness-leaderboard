@@ -8,51 +8,24 @@ import { CONTRACT_ID } from "./page";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { abi } from "./abi";
 
-export const UserCard = ({ userAddr }: { userAddr: `0x${string}` }) => {
+export const UserCard = ({ participant }: { participant: any }) => {
   const account = useAccount();
-  const { writeContract } = useWriteContract();
-  
-  const handleStep = () => {
-    writeContract({ 
-        abi,
-        address: CONTRACT_ID,
-        functionName: 'updateSteps',
-        args: [BigInt(1)],
-    })
-  };
-
-  const { data: userData } = useReadContract({
-    abi,
-    address: CONTRACT_ID,
-    functionName: 'users',
-    args: [userAddr],
-  })
-  
-  // Assuming userData is an array with [address, weeklySteps, exists, ...]
-  const address = userData ? userData[0] : userAddr;
-  const steps = userData ? userData[1].toString() : "0";
-  const isRegistered = userData ? userData[2] : false;
 
   return (
     <div style={{ margin: "1%" }}>
-      <Card sx={{ maxWidth: 200 }}>
+      <Card sx={{ maxWidth: 400 }}>
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            {address.slice(0, 6)}...{address.slice(-4)}
-          </Typography>
           <Typography variant="h5" component="div">
-            Steps: {steps}
+            Name: {participant.addr && participant.addr === account.address ? (<b style={{color: "green"}}>{participant.name}</b>) : participant.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Status: {isRegistered ? "Registered" : "Not Registered"}
+            Steps: {Number(participant.weeklySteps) ?? 0}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Status: {participant ? "Registered" : "Not Registered"}
           </Typography>
         </CardContent>
 
-        {isRegistered && address === account.address && (
-          <CardActions>
-            <Button size="small" onClick={handleStep}>Step!</Button>
-          </CardActions>
-        )}
       </Card>
     </div>
   );
