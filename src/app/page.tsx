@@ -5,128 +5,245 @@ import { useAccount, useConnect, useDisconnect, useReadContract, useWriteContrac
 
 
 const abi =[
-  {
-    "compiler": {
-        "version": "0.8.26+commit.8a97fa7a"
-    },
-    "language": "Solidity",
-    "output": {
-        "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
             {
-                "inputs": [],
-                "name": "register",
-                "outputs": [],
-                "stateMutability": "payable",
-                "type": "function"
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
             },
             {
-                "inputs": [],
-                "name": "retrieve",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "retrieveUser",
-                "outputs": [
-                    {
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "num",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "store",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
             }
-        ],
-        "devdoc": {
-            "custom:dev-run-script": "./scripts/deploy_with_ethers.ts",
-            "details": "Store & retrieve value in a variable",
-            "kind": "dev",
-            "methods": {
-                "retrieve()": {
-                    "details": "Return value ",
-                    "returns": {
-                        "_0": "value of 'number'"
-                    }
-                },
-                "store(uint256)": {
-                    "details": "Store value in variable",
-                    "params": {
-                        "num": "value to store"
-                    }
-                }
+          ],
+          "name": "FundsContributed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "NewUserRegistered",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
             },
-            "title": "Storage",
-            "version": 1
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "steps",
+              "type": "uint256"
+            }
+          ],
+          "name": "StepsUpdated",
+          "type": "event"
         },
-        "userdoc": {
-            "kind": "user",
-            "methods": {},
-            "version": 1
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "winner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "steps",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "payout",
+              "type": "uint256"
+            }
+          ],
+          "name": "WeeklyWinner",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "PARTICIPATION_FEE",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "WEEK_DURATION",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "endWeekAndPayout",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getParticipants",
+          "outputs": [
+            {
+              "internalType": "address[]",
+              "name": "",
+              "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "registerUser",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_steps",
+              "type": "uint256"
+            }
+          ],
+          "name": "updateSteps",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "userAddresses",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "users",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "weeklySteps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "weekStartTime",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "stateMutability": "payable",
+          "type": "receive"
         }
-    },
-    "settings": {
-        "compilationTarget": {
-            "contracts/1_Storage.sol": "Storage"
-        },
-        "evmVersion": "cancun",
-        "libraries": {},
-        "metadata": {
-            "bytecodeHash": "ipfs"
-        },
-        "optimizer": {
-            "enabled": false,
-            "runs": 200
-        },
-        "remappings": []
-    },
-    "sources": {
-        "contracts/1_Storage.sol": {
-            "keccak256": "0xc518c2b1fc78b1551f6dbc945ca68e1b91611fb687bffa1ba24e5720ac896e97",
-            "license": "None",
-            "urls": [
-                "bzz-raw://8a83a6d2f2dc99acc1d6a9ab360ac28f6e4ef5cbc8f737e549b1db9853d6af1d",
-                "dweb:/ipfs/QmZEfh3AZ2mgNgdx73HW1Fhg3reowBnKFhMfGDkKe5dhSe"
-            ]
-        }
-    },
-    "version": 1
-}
-];
-const CONTRACT_ID="0x8078Fb8bDF7177CeC68E52fF86cd1c5B40494316";
+      ] as const;
+const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
 
 function App() {
   const account = useAccount()
   const { connectors, connect, status, error } = useConnect()
   const { disconnect } = useDisconnect()
-  const result = useReadContract({
+  const { data: participationFee, isError, error: readError } = useReadContract({
     abi,
-    address: CONTRACT_ID,
-    functionName: 'register',
+    address: CONTRACT_ID, // Replace with your contract's address
+    functionName: 'PARTICIPATION_FEE',
   });
   const { writeContract } = useWriteContract()
-  console.log("result: ", result);
+  console.log("result: ", participationFee, isError, readError);
 
   return (
     <>
