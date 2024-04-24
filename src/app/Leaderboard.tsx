@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, Avatar, Divider, Box, LinearProgress } from '@mui/material';
 import { useAccount } from 'wagmi';
 import { SvgIcon } from '@mui/material';
+import { formatEther } from 'viem';
 
 function TrophyIcon({ color }) {
   return (

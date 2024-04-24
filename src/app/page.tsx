@@ -32,6 +32,23 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [lastUserSteps, setLastUserSteps] = useState(null);
 
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      try {
+        const participantsData = await readContract(getConfig(), {
+          abi,
+          address: CONTRACT_ID,
+          functionName: 'getParticipants',
+        });
+        setParticipants(participantsData);
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    };
+
+    fetchParticipants();
+  }, []); // Run once on component mount
+
   useWatchBlockNumber({
     onBlockNumber: async () => {
       const participants = await readContract(getConfig(), {
