@@ -26,7 +26,7 @@ export const EndCompetitionButton = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
       {/* <Box
         display="flex"
         flexDirection="column"

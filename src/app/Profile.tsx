@@ -5,7 +5,6 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 const Profile = () => {
   const account = useAccount();
-  const { disconnect } = useDisconnect();
 
   return (
     <div style={styles.profileContainer}>
@@ -17,6 +16,11 @@ const Profile = () => {
 // Styles for the Profile component
 const styles = {
   profileContainer: {
+    position: 'absolute',
+    top: '10px',
+    left: '20px',
+    justifyContent: 'center',
+    display: 'flex',
     backgroundColor: '#f9f9f9',
     borderRadius: '8px',
     padding: '20px',

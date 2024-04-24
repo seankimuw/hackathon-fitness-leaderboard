@@ -16,16 +16,16 @@ const JoinCompetitionPage = () => {
 
   const { writeContract } = useWriteContract();
 
-  const handleJoinCompetition = async () => {
+  const handleJoinCompetition = () => {
     setIsLoading(true);
     try {
-      await writeContract({
+      writeContract({ 
+        abi,
         address: CONTRACT_ID,
-        abi: abi,
         functionName: 'registerUser',
         value: participationFee,
+        args: ["Sean"],
       });
-      alert('Successfully joined the competition!');
     } catch (error) {
       console.error('Error joining competition:', error);
       alert('Failed to join the competition. Please try again.');

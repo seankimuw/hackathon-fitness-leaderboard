@@ -8,11 +8,14 @@ import JoinCompetitionPage from './JoinCompetitionPage';
 import Profile from './Profile';
 import UserCard from './card';
 import EndCompetitionButton from './endCompetitionBtn';
+import AppleWatchTracker from './AppleWatchTracker';
 
-export const CONTRACT_ID = "0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A"
+export const CONTRACT_ID = "0x2a050cd13674e614eb7a36dd4347d358d46de9f8"
 
 function App() {
   const account = useAccount()
+
+  const { writeContract } = useWriteContract();
 
   const { data: participationFee, isError, error: readError } = useReadContract({
     abi,
@@ -25,6 +28,11 @@ function App() {
     address: CONTRACT_ID,
     functionName: 'getParticipants',
   })
+
+  const participantAddresses = participants?.map((participant) => participant.addr);
+
+  const currentUser = participants?.find((participant) => participant.addr === account.address);
+
 
   // useEffect(() => {
   //   if (participants) {
@@ -39,26 +47,31 @@ function App() {
   //   }
   // }
   // , [participants])
+  console.log(participants, participantAddresses, account)
+  if (!account || !account.address) {
+    return <Profile/>
+  }
 
   return (
     <div >
-      <ConnectButton />
-    <EndCompetitionButton/>
+      <Profile />
 
-      {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage /> : ''}
-      <div className="grid grid-cols-1">
+      {!participantAddresses || !participantAddresses?.includes(account.address) ? <JoinCompetitionPage /> : <EndCompetitionButton/>}
+      {participantAddresses && participantAddresses?.includes(account.address) ? 
+      (<div className="grid grid-cols-1">
         <h2 className="text-2xl font-bold mt-8 mb-4" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Step Competition</h2>
         <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mg-4">
-            {participants?.map((userAddr, index) => (
+            {participants?.map((participant) => (
               <UserCard 
-                key={userAddr} 
-                userAddr={userAddr}
+                key={participant.addr} 
+                userAddr={participant.addr as any}
               />
             ))}
           </div>
         </div>
-      </div>
+      </div>) : <>  </>}
+      <AppleWatchTracker progress={Number(currentUser?.weeklySteps)}/>
     </div>
   )
 }
