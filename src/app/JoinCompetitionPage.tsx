@@ -32,10 +32,8 @@ const JoinCompetitionPage = () => {
         value: participationFee,
         args: [name], // Use the dynamic name
       });
-      alert('Successfully joined the competition!');
     } catch (error) {
       console.error('Error joining competition:', error);
-      alert('Failed to join the competition. Please try again.');
     } finally {
       setIsLoading(false);
     }

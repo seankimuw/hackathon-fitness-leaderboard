@@ -10,7 +10,7 @@ function TrophyIcon({ color }) {
     </SvgIcon>)
 }
 
-function Leaderboard({ sortedParticipants }) {
+function Leaderboard({ sortedParticipants, counter }) {
   const { address } = useAccount();
   const maxSteps = 100; // Define the maximum steps for the progress bar
 
@@ -38,14 +38,15 @@ function Leaderboard({ sortedParticipants }) {
                     </Typography>
                   }
                   secondary={
+                    // Number(participant.weeklySteps) + (participant.addr === address ? counter : 0)
                     <Box>
                       <LinearProgress
                         variant="determinate"
-                        value={(Number(participant.weeklySteps) / maxSteps) * 100} // Calculate progress percentage
+                        value={ Number(participant.weeklySteps) + (participant.addr === address ? counter : 0) / maxSteps * 100} // Calculate progress percentage
                         sx={{ height: 10, borderRadius: 5 }}
                       />
                       <Typography variant="caption" color="text.secondary" align="right">
-                        {Number(participant.weeklySteps)} / {maxSteps} steps
+                        { Number(participant.weeklySteps) + (participant.addr === address ? counter : 0)} / {maxSteps} steps
                       </Typography>
                     </Box>
                   }

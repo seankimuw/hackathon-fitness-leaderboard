@@ -67,13 +67,21 @@ function App() {
   }, [lastUserSteps, participants, winner])
 
   const handleSteps = () => {
-    writeContract({
-      address: CONTRACT_ID,
-      abi,
-      functionName: 'updateSteps',
-      args: [BigInt(3)],
-    });
-  }
+    setCounter(prev => ++prev);
+    if (counter >= 4) {
+      writeContract({ 
+        abi,
+        address: CONTRACT_ID,
+        functionName: 'updateSteps',
+        args: [BigInt(5)],
+      }, {
+        onSuccess: () => {
+
+        }
+      });
+      console.log("Write contract by 5 steps!")
+    }
+  };
 
   const participantAddresses = participants?.map((participant) => participant.addr);
   const sortedParticipants = [...participants ?? []].sort((a, b) => Number(b.weeklySteps) - Number(a.weeklySteps));
@@ -103,7 +111,7 @@ function App() {
       {!participantAddresses || !participantAddresses.includes(account.address) ? <JoinCompetitionPage /> : null}
       {participantAddresses && participantAddresses.includes(account.address) ? (
         <>
-          <Leaderboard sortedParticipants={sortedParticipants} />
+          <Leaderboard sortedParticipants={sortedParticipants} counter={counter}/>
           {winner ? (<Container style={{display: "flex", justifyContent:"center", marginTop: "70px"}}>
             <h1>{winner} is the winner!</h1>
           </Container>) : null}
