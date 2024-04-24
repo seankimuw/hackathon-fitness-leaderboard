@@ -12,21 +12,22 @@ import AppleWatchTracker from './AppleWatchTracker';
 import Leaderboard from './Leaderboard';
 import { Button, CardActions } from '@mui/material';
 import { watchContractEvent } from '@wagmi/core'
+import { getConfig } from '@/wagmi';
 
 export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920"
 
 function App() {
   const account = useAccount();
 
-  // const unwatch = watchContractEvent(config, {
-  //   address: CONTRACT_ID,
-  //   abi,
-  //   eventName: 'Transfer',
-  //   onLogs(logs) {
-  //     console.log('New logs!', logs)
-  //   },
-  // })
-  // unwatch()
+  const unwatch = watchContractEvent(getConfig(), {
+    address: CONTRACT_ID,
+    abi,
+    eventName: 'NewUserRegistered',
+    onLogs(logs) {
+      console.log('New User Registered !', logs)
+    },
+  })
+  unwatch()
 
 
   const { data: participants } = useReadContract({

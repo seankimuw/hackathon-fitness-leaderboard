@@ -49,6 +49,7 @@ const JoinCompetitionPage = () => {
         alignItems="center"
         justifyContent="center"
         minHeight="100vh"
+        sx={{ backgroundColor: '#181818', color: '#fff', padding: 3 }} // Dark background
       >
         <Typography variant="h4" gutterBottom>
           Join Competition
@@ -68,7 +69,25 @@ const JoinCompetitionPage = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{
+            mt: 2,
+            input: { color: '#fff' }, // Light text color
+            label: { color: '#aaa' }, // Light label color
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#aaa', // Light border color
+              },
+              '&:hover fieldset': {
+                borderColor: '#fff', // Border color on hover
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#fff', // Border color when focused
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: { color: '#aaa' }, // Light label color
+          }}
         />
         <Button
           variant="contained"
