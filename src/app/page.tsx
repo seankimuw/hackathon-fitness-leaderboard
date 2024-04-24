@@ -62,7 +62,7 @@ function App() {
   useEffect(() => {
     if (!lastUserSteps && participants.length) {
       const currentUser = participants?.find((participant) => participant.addr === account.address);
-      setLastUserSteps(currentUser.weeklySteps);
+      setLastUserSteps(currentUser?.weeklySteps ?? 0);
     }
   }, [lastUserSteps, participants, winner])
 
