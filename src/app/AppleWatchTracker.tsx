@@ -6,12 +6,13 @@ import Image, { StaticImageData } from 'next/image';
 
 interface AppleWatchTrackerProps {
   progress: number; // Progress value between 0 and 100
+  participant: any;
 }
 
 const WatchContainer = styled(Paper)(({ theme }) => ({
   position: 'relative',
-  width: 300, // Adjust based on your image size
-  height: 400, // Adjust based on your image size
+  width: 225, // Adjust based on your image size
+  height: 300, // Adjust based on your image size
   overflow: 'hidden',
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[4],
@@ -22,8 +23,8 @@ const ProgressContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 180, // Adjust based on your image and desired size
-  height: 180, // Adjust based on your image and desired size
+  width: 120, // Adjust based on your image and desired size
+  height: 120, // Adjust based on your image and desired size
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -32,8 +33,10 @@ const ProgressContainer = styled(Box)(({ theme }) => ({
   zIndex: 1,
 }));
 
-const AppleWatchTracker: React.FC<AppleWatchTrackerProps> = ({ progress }) => {
+const AppleWatchTracker: React.FC<AppleWatchTrackerProps> = ({ progress, participant }) => {
   return (
+    <>
+    <Typography>{participant.name}</Typography>
     <WatchContainer elevation={3}>
       <Image
         src={watchImage as StaticImageData}
@@ -67,6 +70,7 @@ const AppleWatchTracker: React.FC<AppleWatchTrackerProps> = ({ progress }) => {
         </Typography>
       </ProgressContainer>
     </WatchContainer>
+    </>
   );
 };
 

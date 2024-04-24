@@ -4,25 +4,17 @@ import { Button, Typography, Box, CircularProgress, Container } from '@mui/mater
 import { abi } from './abi'; // Adjust the import according to your ABI file path
 import { CONTRACT_ID } from './page'; // Adjust the import according to where CONTRACT_ID is defined
 
-export const EndCompetitionButton = () => {
+export const EndCompetitionButton = ({sortedParticipants, handleSetWinner }: {sortedParticipants: any, handleSetWinner: any}) => {
   const [isLoading, setIsLoading] = useState(false);
   const { writeContract } = useWriteContract();
 
-  const handleEndCompetition = async () => {
-    setIsLoading(true);
-    try {
-      await writeContract({
+  const handleEndCompetition = () => {writeContract({
         address: CONTRACT_ID,
         abi: abi,
         functionName: 'endWeekAndPayout', // Replace with your actual contract function
+        args: []
       });
-      alert('Competition ended successfully!');
-    } catch (error) {
-      console.error('Error ending competition:', error);
-      alert('Failed to end competition. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+      handleSetWinner(sortedParticipants[0].name);
   };
 
   return (
