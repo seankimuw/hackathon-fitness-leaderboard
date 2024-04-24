@@ -12,6 +12,7 @@ import { Button, Container, SvgIcon } from '@mui/material';
 import { readContract } from 'wagmi/actions';
 import runningImage from '../assets/image.png';
 import Image, { StaticImageData } from 'next/image';
+import ResetCompetitionButton from './resetCompetitionBtn';
 
 export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920";
 
@@ -27,7 +28,7 @@ function App() {
   const account = useAccount();
   const { writeContract } = useWriteContract();
   const [participants, setParticipants] = useState([]);
-  const [winner, setWinner] = useState();
+  const [winner, setWinner] = useState("");
   const [counter, setCounter] = useState(0);
   const [lastUserSteps, setLastUserSteps] = useState(null);
 
@@ -39,6 +40,17 @@ function App() {
         functionName: 'getParticipants',
       });
       setParticipants(participants as any)
+      let winner;
+      try {
+        winner = await readContract(getConfig(), {
+          abi,
+          address: CONTRACT_ID,
+          functionName: 'getLastWinner',
+        });
+        setWinner(winner[0]);
+      } catch(e) {
+        console.log(e);
+      }
       const newUserSteps = participants.find((p) => p.addr === account.address)?.weeklySteps;
       if (lastUserSteps && newUserSteps && newUserSteps > lastUserSteps) {
         setCounter(0);
@@ -52,7 +64,7 @@ function App() {
       const currentUser = participants?.find((participant) => participant.addr === account.address);
       setLastUserSteps(currentUser.weeklySteps);
     }
-  }, [lastUserSteps, participants])
+  }, [lastUserSteps, participants, winner])
 
   const handleSteps = () => {
     writeContract({
@@ -83,13 +95,18 @@ function App() {
         {winner || !participantAddresses || !participantAddresses.includes(account.address) ? null : (
           <EndCompetitionButton />
         )}
+        {!winner ? null : (
+          <ResetCompetitionButton />
+        )}
       </header>
 
-      {winner ? <h1>{winner} is the winner!</h1> : null}
       {!participantAddresses || !participantAddresses.includes(account.address) ? <JoinCompetitionPage /> : null}
       {participantAddresses && participantAddresses.includes(account.address) ? (
         <>
           <Leaderboard sortedParticipants={sortedParticipants} />
+          {winner ? (<Container style={{display: "flex", justifyContent:"center", marginTop: "70px"}}>
+            <h1>{winner} is the winner!</h1>
+          </Container>) : null}
           <Container style={{display: "flex", justifyContent:"center", marginTop: "70px"}}>
             <Button
               onClick={handleSteps}
