@@ -11,11 +11,23 @@ import EndCompetitionButton from './endCompetitionBtn';
 import AppleWatchTracker from './AppleWatchTracker';
 import Leaderboard from './Leaderboard';
 import { Button, CardActions } from '@mui/material';
+import { watchContractEvent } from '@wagmi/core'
 
-export const CONTRACT_ID = "0x2a050cd13674e614eb7a36dd4347d358d46de9f8"
+export const CONTRACT_ID = "0x78dfc914f3770367e206960574c8e29ccefb4920"
 
 function App() {
   const account = useAccount();
+
+  // const unwatch = watchContractEvent(config, {
+  //   address: CONTRACT_ID,
+  //   abi,
+  //   eventName: 'Transfer',
+  //   onLogs(logs) {
+  //     console.log('New logs!', logs)
+  //   },
+  // })
+  // unwatch()
+
 
   const { data: participants } = useReadContract({
     abi,
