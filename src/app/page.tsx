@@ -3,12 +3,14 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount, useConnect, useDisconnect, useReadContract, useWriteContract } from 'wagmi'
 import { abi } from './abi';
+import JoinCompetitionPage from './JoinCompetitionPage';
+import Profile from './Profile';
+import Card from './card';
 
-const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
+export const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
 
 function App() {
   const account = useAccount()
-  const { disconnect } = useDisconnect()
   const { data: participationFee, isError, error: readError } = useReadContract({
     abi,
     address: CONTRACT_ID, // Replace with your contract's address
@@ -43,26 +45,10 @@ function App() {
 
   return (
     <>
-      <div>
-        <h2>Account</h2>
-
-        <div>
-          status: {account.status}
-          <br />
-          addresses: {JSON.stringify(account.addresses)}
-          <br />
-          chainId: {account.chainId}
-        </div>
-
-        {account.status === 'connected' && (
-          <button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </button>
-        )}
-      </div>
-
       <ConnectButton />
 
+      
+{/*     
       {!account.address || !participants?.includes(account.address) ? (<button 
         onClick={() => 
           writeContract({ 
@@ -75,10 +61,15 @@ function App() {
       }
     >
       Join Competition
-    </button>) : <></>}
+    </button>) : <></>} */}
+
+
+  {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage/> : '' }
+
+    {/* {!account.address || !participants?.includes(account.address) ? (<JoinCompetitionPage contractAddress={account.address!}/>) : <></>} */}
 
     <div>PARTICIPANTS: {participants?.map((participant) => (
-      <div>{participant}</div>
+      <Card/>
     ))}</div>
 
     <button 
