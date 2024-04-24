@@ -8,7 +8,6 @@ const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
 
 function App() {
   const account = useAccount()
-  const { connectors, connect, status, error } = useConnect()
   const { disconnect } = useDisconnect()
   const { data: participationFee, isError, error: readError } = useReadContract({
     abi,
@@ -23,7 +22,24 @@ function App() {
   });
   const { writeContract } = useWriteContract()
   console.log("result: ", participationFee, isError, readError);
+  // const users = participants?.map((participant) => {
+  //   const { data: users } = useReadContract({
+  //     abi,
+  //     address: CONTRACT_ID, // Replace with your contract's address
+  //     functionName: 'users',
+  //     args: [participant],
+  //   })
+  // });
+  
+  const { data: users } = useReadContract({
+    abi,
+    address: CONTRACT_ID, // Replace with your contract's address
+    functionName: 'users',
+    args: ["0xcaC409e24E119Be64359E83CA96932824eaaa605"],
+  })
+  
   console.log("participants: ", participants);
+  console.log("users: ", users);
 
   return (
     <>
@@ -47,7 +63,7 @@ function App() {
 
       <ConnectButton />
 
-      <button 
+      {!account.address || !participants?.includes(account.address) ? (<button 
         onClick={() => 
           writeContract({ 
             abi,
@@ -59,27 +75,40 @@ function App() {
       }
     >
       Join Competition
-    </button>
+    </button>) : <></>}
 
-      <div>
-        <h2>Connect</h2>
-        {connectors.map((connector) => (
-          <button
-            key={connector.uid}
-            onClick={() => connect({ connector })}
-            type="button"
-          >
-            {connector.name}
-          </button>
-        ))}
-        <div>{status}</div>
-        <div>{error?.message}</div>
-      </div>
-
-    <div>{participants?.map((participant) => (
+    <div>PARTICIPANTS: {participants?.map((participant) => (
       <div>{participant}</div>
     ))}</div>
+
+    <button 
+        onClick={() => 
+          writeContract({ 
+            abi,
+            address: CONTRACT_ID,
+            functionName: 'registerUser',
+            value: participationFee,
+            args: [],
+        })
+      }
+    >
+      
+    </button>
+{/* 
+    {account.address && !participants?.includes(account.address) ? (<button 
+        onClick={() => 
+          writeContract({ 
+            abi,
+            address: CONTRACT_ID,
+            functionName: 'updateSteps',
+            args: [BigInt(1)],
+        })
+      }
+    >
+      Update Steps : Current Steps {participant}
+    </button>) : <></>} */}
     </>
+
   )
 }
 
