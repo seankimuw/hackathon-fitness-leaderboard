@@ -1,17 +1,4 @@
-/**
- * @type {import('next').NextConfig}
- */
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
 
-const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'ipfs.io',
-      },
-    ],
-  },
-};
-
-module.exports = nextConfig;
+module.exports = nextConfig
