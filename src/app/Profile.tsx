@@ -16,7 +16,7 @@ const Profile = () => {
 // Styles for the Profile component
 const styles = {
   profileContainer: {
-    position: 'absolute',
+
     top: '10px',
     left: '20px',
     justifyContent: 'center',
