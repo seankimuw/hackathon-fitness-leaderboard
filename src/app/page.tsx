@@ -6,6 +6,7 @@ import { abi } from './abi';
 import JoinCompetitionPage from './JoinCompetitionPage';
 import Profile from './Profile';
 import Card from './card';
+import EndCompetitionButton from './endCompetitionBtn';
 
 export const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
 
@@ -46,6 +47,7 @@ function App() {
   return (
     <>
       <ConnectButton />
+    <EndCompetitionButton/>
 
       
 {/*     
@@ -65,11 +67,8 @@ function App() {
 
 
   {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage/> : '' }
-
-    {/* {!account.address || !participants?.includes(account.address) ? (<JoinCompetitionPage contractAddress={account.address!}/>) : <></>} */}
-
     <div>PARTICIPANTS: {participants?.map((participant) => (
-      <Card/>
+      <Card key={participant}/>
     ))}</div>
 
     <button 
@@ -83,23 +82,8 @@ function App() {
         })
       }
     >
-      
     </button>
-{/* 
-    {account.address && !participants?.includes(account.address) ? (<button 
-        onClick={() => 
-          writeContract({ 
-            abi,
-            address: CONTRACT_ID,
-            functionName: 'updateSteps',
-            args: [BigInt(1)],
-        })
-      }
-    >
-      Update Steps : Current Steps {participant}
-    </button>) : <></>} */}
     </>
-
   )
 }
 
