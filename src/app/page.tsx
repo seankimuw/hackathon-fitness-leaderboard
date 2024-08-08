@@ -23,7 +23,7 @@ function App() {
     address: CONTRACT_ID, // Replace with your contract's address
     functionName: 'getParticipants',
   });
-  const { writeContract } = useWriteContract()
+  const { writeContract } = useWriteContract();
   console.log("result: ", participationFee, isError, readError);
   // const users = participants?.map((participant) => {
   //   const { data: users } = useReadContract({
