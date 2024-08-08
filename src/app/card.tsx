@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -10,9 +9,7 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { abi } from "./abi";
 
 export const UserCard = ({ userAddr }: { userAddr: `0x${string}` }) => {
-    const account = useAccount();
-  const [stepCount, setStepCount] = React.useState(0);
-
+  const account = useAccount();
   const { writeContract } = useWriteContract();
   
   const handleStep = () => {
@@ -22,33 +19,40 @@ export const UserCard = ({ userAddr }: { userAddr: `0x${string}` }) => {
         functionName: 'updateSteps',
         args: [BigInt(1)],
     })
-    setStepCount(prevCount => prevCount + 1);
   };
 
-  const { data: users } = useReadContract({
+  const { data: userData } = useReadContract({
     abi,
-    address: CONTRACT_ID, // Replace with your contract's address
+    address: CONTRACT_ID,
     functionName: 'users',
     args: [userAddr],
   })
   
-  console.log(users);
+  // Assuming userData is an array with [address, weeklySteps, exists, ...]
+  const address = userData ? userData[0] : userAddr;
+  const steps = userData ? userData[1].toString() : "0";
+  const isRegistered = userData ? userData[2] : false;
 
   return (
     <div style={{ margin: "1%" }}>
       <Card sx={{ maxWidth: 200 }}>
         <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {address.slice(0, 6)}...{address.slice(-4)}
+          </Typography>
           <Typography variant="h5" component="div">
-            {userAddr}
+            Steps: {steps}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Steps: {users ? users[1].toString() : "0"}
+            Status: {isRegistered ? "Registered" : "Not Registered"}
           </Typography>
         </CardContent>
 
-        {users && users[0] === account.address && (<CardActions>
-          <Button size="small" onClick={handleStep}>Step!</Button>
-        </CardActions>)}
+        {isRegistered && address === account.address && (
+          <CardActions>
+            <Button size="small" onClick={handleStep}>Step!</Button>
+          </CardActions>
+        )}
       </Card>
     </div>
   );

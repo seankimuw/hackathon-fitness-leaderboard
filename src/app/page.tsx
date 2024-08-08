@@ -1,91 +1,62 @@
 'use client'
 
+import React, { useEffect } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useAccount, useConnect, useDisconnect, useReadContract, useWriteContract } from 'wagmi'
-import { abi } from './abi';
-import JoinCompetitionPage from './JoinCompetitionPage';
-import Profile from './Profile';
-import Card from './card';
+import { useAccount, useReadContract } from 'wagmi'
+import { abi } from './abi'
+import JoinCompetitionPage from './JoinCompetitionPage'
+import UserCard from './card'
 
-export const CONTRACT_ID="0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A";
+export const CONTRACT_ID = "0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A"
 
 function App() {
   const account = useAccount()
+
   const { data: participationFee, isError, error: readError } = useReadContract({
     abi,
-    address: CONTRACT_ID, // Replace with your contract's address
+    address: CONTRACT_ID,
     functionName: 'PARTICIPATION_FEE',
-  });
+  })
 
   const { data: participants } = useReadContract({
     abi,
-    address: CONTRACT_ID, // Replace with your contract's address
+    address: CONTRACT_ID,
     functionName: 'getParticipants',
-  });
-  const { writeContract } = useWriteContract();
-  console.log("result: ", participationFee, isError, readError);
-  // const users = participants?.map((participant) => {
-  //   const { data: users } = useReadContract({
-  //     abi,
-  //     address: CONTRACT_ID, // Replace with your contract's address
-  //     functionName: 'users',
-  //     args: [participant],
-  //   })
-  // });
-  
-  const { data: users } = useReadContract({
-    abi,
-    address: CONTRACT_ID, // Replace with your contract's address
-    functionName: 'users',
-    args: ["0xcaC409e24E119Be64359E83CA96932824eaaa605"],
   })
-  
-  console.log("participants: ", participants);
-  console.log("users: ", users);
+
+  // useEffect(() => {
+  //   if (participants) {
+  //     for (let i = 0; i < participants.length; i++) {
+  //       let data = useReadContract({
+  //         abi,
+  //         address: CONTRACT_ID,
+  //         functionName: 'users',
+  //         args: [participants[i]],
+  //       })
+  //     }
+  //   }
+  // }
+  // , [participants])
 
   return (
-    <>
+    <div >
       <ConnectButton />
 
-      
-{/*     
-      {!account.address || !participants?.includes(account.address) ? (<button 
-        onClick={() => 
-          writeContract({ 
-            abi,
-            address: CONTRACT_ID,
-            functionName: 'registerUser',
-            value: participationFee,
-            args: [],
-        })
-      }
-    >
-      Join Competition
-    </button>) : <></>} */}
-
-
-  {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage/> : '' }
-
-    {/* {!account.address || !participants?.includes(account.address) ? (<JoinCompetitionPage contractAddress={account.address!}/>) : <></>} */}
-
-    <div>PARTICIPANTS: {participants?.map((participant) => (
-      <Card userAddr={participant}/>
-    ))}</div>
-{/* 
-    {account.address && !participants?.includes(account.address) ? (<button 
-        onClick={() => 
-          writeContract({ 
-            abi,
-            address: CONTRACT_ID,
-            functionName: 'updateSteps',
-            args: [BigInt(1)],
-        })
-      }
-    >
-      Update Steps : Current Steps {participant}
-    </button>) : <></>} */}
-    </>
-
+      {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage /> : ''}
+      <div className="grid grid-cols-1">
+        <h2 className="text-2xl font-bold mt-8 mb-4" style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Step Competition</h2>
+        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mg-4">
+            {participants?.map((userAddr, index) => (
+              <UserCard 
+                key={userAddr} 
+                userAddr={userAddr}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
