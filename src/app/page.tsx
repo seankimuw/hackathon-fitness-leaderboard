@@ -2,10 +2,12 @@
 
 import React, { useEffect } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useAccount, useReadContract } from 'wagmi'
-import { abi } from './abi'
-import JoinCompetitionPage from './JoinCompetitionPage'
-import UserCard from './card'
+import { useAccount, useConnect, useDisconnect, useReadContract, useWriteContract } from 'wagmi'
+import { abi } from './abi';
+import JoinCompetitionPage from './JoinCompetitionPage';
+import Profile from './Profile';
+import UserCard from './card';
+import EndCompetitionButton from './endCompetitionBtn';
 
 export const CONTRACT_ID = "0x3d307d82BFB137481ce6316f38eD7f1A772e8d6A"
 
@@ -41,6 +43,7 @@ function App() {
   return (
     <div >
       <ConnectButton />
+    <EndCompetitionButton/>
 
       {!account.address || !participants?.includes(account.address) ? <JoinCompetitionPage /> : ''}
       <div className="grid grid-cols-1">
